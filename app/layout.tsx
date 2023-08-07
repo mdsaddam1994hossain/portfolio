@@ -1,6 +1,12 @@
+'use client';
+import Header from '@/components/Header/Header'
+
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Head from 'next/head'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,9 +20,31 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  const [isSticky, setIsSticky] = useState(false);
+
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+    setIsSticky(scrollY > 120);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      
+      
+      <body className={inter.className}>
+      <header className={`px-4 ${isSticky ? 'sticky-header' : ''}`}>
+      <Header isSticky={isSticky}/>
+      </header>
+        {children}
+        </body>
+     
     </html>
   )
 }
